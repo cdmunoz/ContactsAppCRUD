@@ -1,0 +1,17 @@
+<resources>
+  <string name="app_name">Contacts App</string>
+  <string name="date_hint">Hint</string>
+  <string name="contact_description">Contact Description</string>
+  <string name="add_contact">Add Contact</string>
+  <string name="update_contact">Update Contact</string>
+  <string name="first_name">First Name</string>
+  <string name="last_name">Last Name</string>
+  <string name="date_of_birth">Tap to set the Date of Birth</string>
+  <string name="phone_number">Phone Number</string>
+  <string name="email">Email</string>
+  <string name="address">Address</string>
+  <string name="set_date">Set Date</string>
+  <string name="action_search">Search</string>
+  <string name="save">Save</string>
+  <string name="contact_information">Contact Information</string>
+</resources>
