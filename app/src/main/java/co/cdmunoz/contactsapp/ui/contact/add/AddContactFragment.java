@@ -198,10 +198,11 @@ public class AddContactFragment extends LifecycleFragment
     buttonAddContact.setOnClickListener(v -> {
       if (allFieldsOk()) {
         Contact contactToUpdate = new Contact(contact.getId(), firstName.getText().toString(),
-            lastName.getText().toString(), phoneNumber.getText().toString(),
+            lastName.getText().toString(), ViewUtilities.getInputFromEditTexts(layoutPhone),
             ViewUtilities.getLocalDateTimeFromString(
-                dateOfBirth.getText().toString().substring(0, 10)), email.getText().toString(),
-            address.getText().toString());
+                dateOfBirth.getText().toString().substring(0, 10)),
+            ViewUtilities.getInputFromEditTexts(layoutEmail),
+            ViewUtilities.getInputFromEditTexts(layoutAddress));
         addContactViewModel.updateContact(contactToUpdate);
         getActivity().finish();
       }

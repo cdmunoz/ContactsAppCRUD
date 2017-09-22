@@ -47,6 +47,8 @@ dependencies {
 
   provided 'javax.annotation:jsr250-api:1.0'
 
+  compile 'ch.acra:acra:4.9.2'
+
   compile "android.arch.lifecycle:extensions:${arch_version}"
   compile "android.arch.persistence.room:runtime:${arch_version}"
 

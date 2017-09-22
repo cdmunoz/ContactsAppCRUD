@@ -6,14 +6,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 import co.cdmunoz.contactsapp.ContactsAppApplication;
 import co.cdmunoz.contactsapp.R;
@@ -87,6 +88,15 @@ public class ContactsListFragment extends LifecycleFragment
 
   private void setUpSearchView(View v) {
     searchView = v.findViewById(R.id.searchView);
+    //set color to searchview
+    SearchView.SearchAutoComplete searchAutoComplete =
+        searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+    searchAutoComplete.setHintTextColor(getResources().getColor(android.R.color.white));
+    searchAutoComplete.setTextColor(getResources().getColor(android.R.color.white));
+    //change icon color
+    ImageView searchIcon =
+        searchView.findViewById(android.support.v7.appcompat.R.id.search_button);
+    searchIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.ic_search_icon));
     searchView.setOnQueryTextListener(this);
   }
 

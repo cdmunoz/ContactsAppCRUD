@@ -6,7 +6,7 @@
   <string name="update_contact">Update Contact</string>
   <string name="first_name">First Name</string>
   <string name="last_name">Last Name</string>
-  <string name="date_of_birth">Tap to set the Date of Birth</string>
+  <string name="date_of_birth">Tap to open Date Dialog and set the Date of Birth</string>
   <string name="phone_number">Phone Number</string>
   <string name="email">Email</string>
   <string name="address">Address</string>
@@ -14,4 +14,5 @@
   <string name="action_search">Search</string>
   <string name="save">Save</string>
   <string name="contact_information">Contact Information</string>
+  <string name="crash_report">Reporting crash</string>
 </resources>
