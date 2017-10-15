@@ -12,9 +12,11 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -31,7 +33,6 @@ public class AddContactFragment extends LifecycleFragment
 
   ActionBar actionBar;
   private EditText firstName, lastName, dateOfBirth, phoneNumber, email, address;
-  private Button buttonAddContact;
   private LinearLayout layoutPhone;
   private LinearLayout layoutEmail;
   private LinearLayout layoutAddress;
@@ -56,6 +57,7 @@ public class AddContactFragment extends LifecycleFragment
     setupViews(view);
     setupClickListeners();
     setupViewModel();
+    setHasOptionsMenu(true);
     return view;
   }
 
@@ -72,7 +74,6 @@ public class AddContactFragment extends LifecycleFragment
     layoutAddress = view.findViewById(R.id.layout_address);
     address = view.findViewById(R.id.edit_text_address);
     buttonAddAddress = view.findViewById(R.id.btn_addAddress);
-    buttonAddContact = view.findViewById(R.id.button_add_contact);
     actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
   }
 
@@ -132,15 +133,6 @@ public class AddContactFragment extends LifecycleFragment
     buttonAddPhone.setOnClickListener(v -> createPhoneEditTextDynamically(""));
     buttonAddEmail.setOnClickListener(v -> createEmailEditTextDynamically(""));
     buttonAddAddress.setOnClickListener(v -> createAddressEditTextDynamically(""));
-    buttonAddContact.setOnClickListener(v -> {
-      addContactViewModel.setContactPhone(ViewUtilities.getInputFromEditTexts(layoutPhone));
-      addContactViewModel.setContactEmail(ViewUtilities.getInputFromEditTexts(layoutEmail));
-      addContactViewModel.setContactAddress(ViewUtilities.getInputFromEditTexts(layoutAddress));
-      if (allFieldsOk()) {
-        addContactViewModel.addContact();
-        getActivity().finish();
-      }
-    });
   }
 
   private boolean allFieldsOk() {
@@ -168,7 +160,6 @@ public class AddContactFragment extends LifecycleFragment
     String toolbarTitle = getResources().getString(R.string.add_contact);
     if (null != contact) {
       setContactInfo();
-      setListenerToUpdateContact();
       toolbarTitle = getResources().getString(R.string.update_contact);
     }
     actionBar.setTitle(toolbarTitle);
@@ -191,22 +182,6 @@ public class AddContactFragment extends LifecycleFragment
     } else {
       address.setText("");
     }
-    buttonAddContact.setText(getString(R.string.update_contact));
-  }
-
-  private void setListenerToUpdateContact() {
-    buttonAddContact.setOnClickListener(v -> {
-      if (allFieldsOk()) {
-        Contact contactToUpdate = new Contact(contact.getId(), firstName.getText().toString(),
-            lastName.getText().toString(), ViewUtilities.getInputFromEditTexts(layoutPhone),
-            ViewUtilities.getLocalDateTimeFromString(
-                dateOfBirth.getText().toString().substring(0, 10)),
-            ViewUtilities.getInputFromEditTexts(layoutEmail),
-            ViewUtilities.getInputFromEditTexts(layoutAddress));
-        addContactViewModel.updateContact(contactToUpdate);
-        getActivity().finish();
-      }
-    });
   }
 
   private void createPhoneEditTextDynamically(String text) {
@@ -308,5 +283,43 @@ public class AddContactFragment extends LifecycleFragment
   @Override public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
     addContactViewModel.setDobDateTime(LocalDateTime.of(year, month + 1, dayOfMonth, 0, 0));
     dateOfBirth.setText(addContactViewModel.getDobDateTime().toString().substring(0, 10));
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.menu_save, menu);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.action_save:
+        if (null == contact) {//save
+          addContactViewModel.setContactPhone(ViewUtilities.getInputFromEditTexts(layoutPhone));
+          addContactViewModel.setContactEmail(ViewUtilities.getInputFromEditTexts(layoutEmail));
+          addContactViewModel.setContactAddress(ViewUtilities.getInputFromEditTexts(layoutAddress));
+          if (allFieldsOk()) {
+            addContactViewModel.addContact();
+            getActivity().finish();
+          }
+        } else {//update
+          if (allFieldsOk()) {
+            Contact contactToUpdate = new Contact(contact.getId(), firstName.getText().toString(),
+                lastName.getText().toString(), ViewUtilities.getInputFromEditTexts(layoutPhone),
+                ViewUtilities.getLocalDateTimeFromString(
+                    dateOfBirth.getText().toString().substring(0, 10)),
+                ViewUtilities.getInputFromEditTexts(layoutEmail),
+                ViewUtilities.getInputFromEditTexts(layoutAddress));
+            addContactViewModel.updateContact(contactToUpdate);
+            getActivity().finish();
+          }
+        }
+        break;
+      case android.R.id.home:
+        getActivity().finish();
+        break;
+      default:
+        break;
+    }
+    return true;
   }
 }

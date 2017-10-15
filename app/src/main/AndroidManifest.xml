@@ -19,10 +19,8 @@
     </activity>
     <activity
         android:name="co.cdmunoz.contactsapp.ui.contact.add.AddContactActivity"
+        android:parentActivityName=".ui.contact.list.ContactsListActivity"
         android:windowSoftInputMode="adjustResize">
-    <meta-data
-        android:name="android.support.PARENT_ACTIVITY"
-        android:value=".ui.contact.list.ContactsListActivity" />
     </activity>
   </application>
 
