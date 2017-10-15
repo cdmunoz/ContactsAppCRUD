@@ -41,6 +41,10 @@ import static co.cdmunoz.contactsapp.entity.Contact.TABLE_NAME;
     return firstName;
   }
 
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
   public String getLastName() {
     return lastName;
   }

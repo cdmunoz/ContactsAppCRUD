@@ -1,7 +1,9 @@
 package co.cdmunoz.contactsapp.ui.contact.list;
 
+import android.app.SearchManager;
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +14,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -31,7 +35,6 @@ public class ContactsListFragment extends LifecycleFragment
 
   FloatingActionButton floatingActionButton;
   RecyclerView recyclerView;
-  SearchView searchView;
 
   private ContactsAdapter adapter;
   private ContactsListViewModel contactsListViewModel;
@@ -68,7 +71,7 @@ public class ContactsListFragment extends LifecycleFragment
       this.contacts = contacts;
     });
 
-    setUpSearchView(v);
+    setHasOptionsMenu(true);
     return v;
   }
 
@@ -86,18 +89,33 @@ public class ContactsListFragment extends LifecycleFragment
     recyclerView.addItemDecoration(dividerItemDecoration);
   }
 
-  private void setUpSearchView(View v) {
-    searchView = v.findViewById(R.id.searchView);
-    //set color to searchview
-    SearchView.SearchAutoComplete searchAutoComplete =
-        searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-    searchAutoComplete.setHintTextColor(getResources().getColor(android.R.color.white));
-    searchAutoComplete.setTextColor(getResources().getColor(android.R.color.white));
-    //change icon color
-    ImageView searchIcon =
-        searchView.findViewById(android.support.v7.appcompat.R.id.search_button);
-    searchIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.ic_search_icon));
-    searchView.setOnQueryTextListener(this);
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.menu_list, menu);
+
+    // Associate searchable configuration with the SearchView
+    SearchManager searchManager =
+        (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+    SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+    searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+      @Override public boolean onQueryTextSubmit(String s) {
+        return false;
+      }
+
+      @Override public boolean onQueryTextChange(String s) {
+        // Search Filter
+        final List<Contact> filteredModelList = filter(contacts, s);
+        if (filteredModelList.size() > 0) {
+          adapter.setFilter(filteredModelList);
+          return true;
+        } else {
+          // If not matching search filter data
+          Toast.makeText(getContext(), "Not Found", Toast.LENGTH_SHORT).show();
+          return false;
+        }
+      }
+    });
   }
 
   private List<Contact> filter(List<Contact> models, String query) {
