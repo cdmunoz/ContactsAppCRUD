@@ -28,8 +28,7 @@ import co.cdmunoz.contactsapp.ui.contact.add.AddContactActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactsListFragment extends LifecycleFragment
-    implements SearchView.OnQueryTextListener {
+public class ContactsListFragment extends LifecycleFragment {
 
   private static final String TAG = "ContactsListFragment";
 
@@ -138,22 +137,5 @@ public class ContactsListFragment extends LifecycleFragment
     adapter.notifyDataSetChanged();
 
     return filteredModelList;
-  }
-
-  @Override public boolean onQueryTextSubmit(String s) {
-    return false;
-  }
-
-  @Override public boolean onQueryTextChange(String s) {
-    // Search Filter
-    final List<Contact> filteredModelList = filter(contacts, s);
-    if (filteredModelList.size() > 0) {
-      adapter.setFilter(filteredModelList);
-      return true;
-    } else {
-      // If not matching search filter data
-      Toast.makeText(getContext(), "Not Found", Toast.LENGTH_SHORT).show();
-      return false;
-    }
   }
 }
